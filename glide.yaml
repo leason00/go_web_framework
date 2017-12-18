@@ -1,0 +1,14 @@
+package: .
+import:
+- package: apiproject/controllers
+- package: apiproject/models
+- package: apiproject/routers
+- package: github.com/astaxie/beego
+  version: ~1.9.2
+  subpackages:
+  - context/param
+testImport:
+- package: github.com/smartystreets/goconvey
+  version: ~1.6.3
+  subpackages:
+  - convey
