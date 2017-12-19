@@ -3,7 +3,6 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"errors"
-	"fmt"
 )
 
 type User struct {
@@ -23,14 +22,11 @@ func ReadUser(username string)(password string, error error)  {
 }
 
 
-func ReadAllUser()([]User)  {
+func ReadAllUser(limit int, offset int)([]User)  {
 	o := orm.NewOrm()
 	var users []User
 	qs := o.QueryTable("user")
-	cnt, err :=qs.Count()
-	fmt.Println(cnt, err)
-	res, err := qs.All(&users)
-	fmt.Println(res)
+	qs.Limit(limit, offset).All(&users)
 	return users
 
 }

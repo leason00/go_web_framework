@@ -4,7 +4,6 @@ import (
 	"github.com/astaxie/beego"
 	"encoding/json"
 	"apiproject/models"
-	_ "apiproject/msg"
 	"apiproject/msg"
 	"fmt"
 )
@@ -38,13 +37,17 @@ func (u *UserController) LoginFunc() {
 }
 
 func (u *UserController) ListFunc() {
-
-	res := models.ReadAllUser()
+	fmt.Println(u.GetString("test"))
+	//分页数据
+	limit, _ := u.GetInt("limit")
+	page, _ := u.GetInt("page")
+	//数据库返回数据
+	res := models.ReadAllUser(2, limit*(page-1))
 	data := make([]interface{}, 0)
 	for _, value := range res {
 		data = append(data, map[string]interface{}{"id": value.Id, "username": value.Name})
 	}
-	fmt.Println(data)
+	//返回数据
 	u.Data["json"] = msg.ArrayRes("查询成功！", data)
 	u.ServeJSON()
 }
