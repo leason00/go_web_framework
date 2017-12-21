@@ -8,6 +8,10 @@ import (
 	"math/rand"
 	"apiproject/database/myredis"
 	"github.com/garyburd/redigo/redis"
+	"os"
+	"github.com/satori/go.uuid"
+	"fmt"
+	"strings"
 )
 
 
@@ -89,4 +93,35 @@ func GenerateKey(num int)(string){
 		result = append(result, bytes[r.Intn(len(bytes))])
 	}
 	return string(result)
+}
+
+
+
+//判断路径是否存在 不存在则创建目录
+func PathExists(path string) (bool) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		result := os.Mkdir(path, os.ModePerm)
+		if result == nil{
+			return true
+		}
+		return false
+	}
+	result := os.Mkdir(path, os.ModePerm)
+	if result == nil{
+		return true
+	}
+	return false
+}
+
+//uuid
+func GetUuid() string {
+	// 创建
+	u1 := uuid.NewV4().String()
+	fmt.Println(u1)
+
+	return strings.Join(strings.Split(u1,"-"),"")
 }
