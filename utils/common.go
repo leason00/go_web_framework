@@ -34,6 +34,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+//生成token并存入redis
 func CreateToken(appid string) (string) {
 
 	secret := GenerateKey(10)
@@ -59,6 +60,7 @@ func CreateToken(appid string) (string) {
 	return signedToken
 }
 
+//redis取出key解码token
 func TokenAuth(signedToken string) (string, error) {
 
 	secret, _ := redis.String(myredis.Conn().Do("GET", signedToken))
@@ -78,12 +80,12 @@ func TokenAuth(signedToken string) (string, error) {
 
 //生成随机秘钥
 //@num int 生成字符串位数
-func GenerateKey(mun int)(string){
+func GenerateKey(num int)(string){
 	str := "0123456789abcdefghijklmnopqrstuvwxyz"
 	bytes := []byte(str)
 	result := []byte{}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	for i := 0; i < mun; i++ {
+	for i := 0; i < num; i++ {
 		result = append(result, bytes[r.Intn(len(bytes))])
 	}
 	return string(result)

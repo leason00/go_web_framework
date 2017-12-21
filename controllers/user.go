@@ -26,11 +26,11 @@ func (u *UserController) LoginFunc() {
 	json.Unmarshal(body, &ob)//解析二进制json，把结果放进ob中
 	password, err := models.ReadUser(ob.Username)
 	if err != nil {
-		u.Data["json"] = msg.ErrorRes("账号不存在", 1)
+		u.Data["json"] = msg.ErrNoUser
 		u.ServeJSON()
 	}
 	if password != ob.Password{
-		u.Data["json"] = msg.ErrorRes("密码错误！", 1)
+		u.Data["json"] = msg.ErrPass
 		u.ServeJSON()
 	}
 	//生成token
