@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	_ "apiproject/database/myredis"
 )
 
 
@@ -15,6 +16,7 @@ func init() {
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	//注册默认数据库
 	orm.RegisterDataBase("default", "mysql", "root:@/yanyan?charset=utf8")//密码为空格式
+
 }
 
 func main() {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"apiproject/models"
 	"apiproject/msg"
+	"apiproject/utils"
 	"fmt"
 )
 
@@ -32,22 +33,29 @@ func (u *UserController) LoginFunc() {
 		u.Data["json"] = msg.ErrorRes("密码错误！", 1)
 		u.ServeJSON()
 	}
-	u.Data["json"] = msg.SuccessRes("登录成功！", map[string]interface{}{"token": "51664164165"})
+	//生成token
+	token := utils.CreateToken(ob.Username)
+	u.Ctx.ResponseWriter.Header().Add("Token", token)
+	u.Data["json"] = msg.SuccessRes("登录成功！", nil)
 	u.ServeJSON()
 }
 
 func (u *UserController) ListFunc() {
-	fmt.Println(u.GetString("test"))
+	//从token中取出username/
+	token := u.Ctx.Request.Header.Get("Token")
+	fmt.Println(token)
+	username, _ := utils.TokenAuth(token)
+	fmt.Println(username)
 	//分页数据
 	limit, _ := u.GetInt("limit")
 	page, _ := u.GetInt("page")
 	//数据库返回数据
-	res := models.ReadAllUser(2, limit*(page-1))
+	res, total := models.ReadAllUser(2, limit*(page-1))
 	data := make([]interface{}, 0)
 	for _, value := range res {
 		data = append(data, map[string]interface{}{"id": value.Id, "username": value.Name})
 	}
 	//返回数据
-	u.Data["json"] = msg.ArrayRes("查询成功！", data)
+	u.Data["json"] = msg.ArrayRes("查询成功！", total, data)
 	u.ServeJSON()
 }

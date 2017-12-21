@@ -22,12 +22,13 @@ func ReadUser(username string)(password string, error error)  {
 }
 
 
-func ReadAllUser(limit int, offset int)([]User)  {
+func ReadAllUser(limit int, offset int)([]User,int64)  {
 	o := orm.NewOrm()
 	var users []User
 	qs := o.QueryTable("user")
+	total, _ := qs.Count()
 	qs.Limit(limit, offset).All(&users)
-	return users
+	return users, total
 
 }
 
