@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
+	"github.com/astaxie/beego"
 )
 
 var pool *redis.Pool
@@ -45,8 +46,8 @@ func newPool(server, password string) *redis.Pool {
 }
 
 func init() {
-	server := "10.10.51.30:6379"
-	password := ""
+	server := beego.AppConfig.String("cache::server")
+	password :=  beego.AppConfig.String("cache::password")
 
 	pool = newPool(server, password)
 }
